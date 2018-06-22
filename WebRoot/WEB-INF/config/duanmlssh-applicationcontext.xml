@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:ws="http://jax-ws.dev.java.net/spring/core"
+	xmlns:wss="http://jax-ws.dev.java.net/spring/servlet" xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		   http://jax-ws.dev.java.net/spring/core http://jax-ws.dev.java.net/spring/core.xsd http://jax-ws.dev.java.net/spring/servlet http://jax-ws.dev.java.net/spring/servlet.xsd 
+		   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd http://www.springframework.org/schema/aop 
+		   http://www.springframework.org/schema/aop/spring-aop-4.0.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd 
+		   http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd"
+	default-lazy-init="true">
+	
+	<!-- spring扫描包的路径 -->
+	<context:component-scan base-package="com.neusoft.duanmlssh.web.*.interaction" />
+	<context:component-scan base-package="com.neusoft.duanmlssh.web.*.applogic" />
+	
+	<context:component-scan base-package="com.neusoft.duanmlssh.*.*.applogic"/>
+	<context:component-scan base-package="com.neusoft.duanmlssh.*.*.interaction"/>
+
+	<bean id="testService" class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+		<property name="serviceUrl" value="http://127.0.0.1:8020/duansshService/remote/testService" />
+		<property name="serviceInterface" value="com.neusoft.duanmlssh.remote.TestRemoteManager" />
+	</bean>
+	
+	
+	<!-- 配置文件的定时任务Job 开发如下************Start -->
+	<!-- 定时任务，第一步编写作业类(此处省略SendMessageJob 编写)， 第二步：spring配置文件中配置作业类JobDetailBean -->
+<!-- 	<bean name="joblist" class="org.springframework.scheduling.quartz.JobDetailBean"> -->
+<!-- 		<property name="jobClass" value="com.neusoft.duanmlssh.job.SendMessageJob" /> -->
+<!-- 		<property name="jobDataAsMap"> -->
+<!-- 			<map> -->
+<!-- 				<entry key="timeout" value="30" /> -->
+<!-- 			</map> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
+	<!-- 第三步：配置作业调度的触发方式（触发器） -->
+<!-- 	<bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean"> -->
+<!-- 		<property name="jobDetail" ref="joblist" /> -->
+		<!-- > 每2妙钟运行一次 -->
+<!-- 		<property name="cronExpression" value="* * 12 * * ?" /> -->
+<!-- 	</bean> -->
+	<!-- 第四步：配置调度工厂  调度工厂List可以引用多个步骤三中的触发器-->
+<!-- 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean"> -->
+<!-- 		<property name="triggers"> -->
+<!-- 			<list> -->
+<!-- 				<ref bean="cronTrigger" /> -->
+<!-- 			</list> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
+	<!-- 配置文件的定时任务Job 开发如下************End -->
+	
+	<!-- 注解方式的定时任务Job 开发如下************Start -->
+	<!-- 配置文件中增加1、 xmlns:task="http://www.springframework.org/schema/task" -->
+	<!-- 配置文件中增加2、 http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd" -->
+	<!-- 配置文件中增加3、如下配置： -->
+<!-- 	<task:annotation-driven scheduler="qbScheduler"/>   -->
+<!--     <task:scheduler id="qbScheduler" pool-size="10"/> -->
+<!--     <context:component-scan base-package="com.neusoft.duanmlssh.job" />定时任务：Spring容器要去扫描的包 -->
+	<!-- 注意参数，如果Spring配置文件中》》default-lazy-init="true" 则必须在要作业的Bean上加上 @Lazy(false)-->
+	<!-- 注解方式的定时任务Job 开发如下************End -->
+	
+	   
+</beans>
